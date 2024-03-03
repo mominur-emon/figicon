@@ -3,6 +3,7 @@ const cors = require("cors");
 require("./config/db");
 
 const userRouter = require("./routes/user.route");
+const iconRouter = require("./routes/icon.router");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/api/users", userRouter);
+app.use("/api/icons", iconRouter);
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/./views/index.html");
