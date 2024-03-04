@@ -5,8 +5,7 @@ const multer = require("multer");
 const Storage = multer.diskStorage({
   destination: "uploads",
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + "-" + uniqueSuffix);
+    cb(null, file.originalname);
   },
 });
 const upload = multer({ storage: Storage }).single("iconLink");
@@ -21,7 +20,7 @@ const uploadIcon = async (req, res) => {
           name: req.body.name,
           iconLink: {
             data: req.file.filename,
-            contentType: "image/png",
+            contentType: "image/svg",
           },
           price: req.body.price,
           category: req.body.category,
@@ -37,4 +36,13 @@ const uploadIcon = async (req, res) => {
   }
 };
 
-module.exports = { uploadIcon };
+const getAllIcons = async (req, res) => {
+  try {
+    const icons = await Icon.find();
+    res.status(200).send(icons);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+module.exports = { uploadIcon, getAllIcons };

@@ -36,6 +36,10 @@ const iconSchema = mongoose.Schema(
       required: true,
       enum: ["rounded", "square"],
     },
+    pro: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
