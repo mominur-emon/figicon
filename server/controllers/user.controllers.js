@@ -45,7 +45,7 @@ const loginUser = async (req, res) => {
           },
           process.env.JWT_SECRET,
           {
-            expiresIn: "8h",
+            expiresIn: "1h",
           }
         );
 
@@ -67,6 +67,24 @@ const loginUser = async (req, res) => {
     res.status(401).json({
       error: "Authetication failed!",
     });
+  }
+};
+//delete-> delete single user by id (/api/users/profile/:_id)
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params._id);
+
+    if (user) {
+      return res
+        .status(200)
+        .json({ success: true, message: "The user is deleted!" });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "user not found!" });
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 };
 
@@ -106,4 +124,10 @@ const getSingleUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUserProfile, registerUser, loginUser, getSingleUser };
+module.exports = {
+  getAllUserProfile,
+  registerUser,
+  loginUser,
+  deleteUser,
+  getSingleUser,
+};
