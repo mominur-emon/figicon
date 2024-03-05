@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+//post-> register user (/api/users)
 const registerUser = async (req, res) => {
   try {
     const userExists = await User.findOne({ email: req.body.email });
@@ -16,6 +17,7 @@ const registerUser = async (req, res) => {
     const newUser = new User({
       email: req.body.email,
       password: hashedPassword,
+      isAdmin: req.body.isAdmin,
     });
     await newUser.save();
     res.status(201).json(newUser);
@@ -24,6 +26,7 @@ const registerUser = async (req, res) => {
   }
 };
 
+//post-> login user (/api/users/login)
 const loginUser = async (req, res) => {
   try {
     const user = await User.find({ email: req.body.email });
@@ -67,6 +70,7 @@ const loginUser = async (req, res) => {
   }
 };
 
+//get-> get all user profile (/api/users/profile)
 const getAllUserProfile = async (req, res) => {
   try {
     const users = await User.find();
@@ -86,4 +90,20 @@ const getAllUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { getAllUserProfile, registerUser, loginUser };
+//get-> get single user (/api/users/profile/:_id)
+const getSingleUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params._id);
+
+    if (!user) {
+      res
+        .status(500)
+        .json({ message: "The user with the given ID was not found." });
+    }
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+module.exports = { getAllUserProfile, registerUser, loginUser, getSingleUser };

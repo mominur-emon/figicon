@@ -1,7 +1,7 @@
 const Icon = require("../models/icon.model");
 const multer = require("multer");
 
-//get-> get all icons
+//get-> get all icons (/api/icons)
 const getAllIcons = async (req, res) => {
   try {
     const icons = await Icon.find();
@@ -11,7 +11,7 @@ const getAllIcons = async (req, res) => {
   }
 };
 
-//get-> get single icon
+//get-> get single icon (/api/icons/:_id)
 const getSingleIcon = async (req, res) => {
   try {
     const icon = await Icon.findById(req.params._id);
@@ -36,7 +36,7 @@ const Storage = multer.diskStorage({
 });
 const upload = multer({ storage: Storage }).single("iconLink");
 
-//post-> upload icon
+//post-> upload icon (/api/icons)
 const uploadIcon = async (req, res) => {
   try {
     await upload(req, res, async (error) => {
@@ -63,7 +63,7 @@ const uploadIcon = async (req, res) => {
   }
 };
 
-//put-> update icon
+//put-> update icon (/api/icons/:_id)
 const updateIcon = async (req, res) => {
   try {
     await upload(req, res, async (error) => {
@@ -96,7 +96,7 @@ const updateIcon = async (req, res) => {
   }
 };
 
-//delete-> delete single icon by id
+//delete-> delete single icon by id (/api/icons/:_id)
 const deleteIcon = async (req, res) => {
   try {
     const icon = await Icon.findByIdAndDelete(req.params._id);
