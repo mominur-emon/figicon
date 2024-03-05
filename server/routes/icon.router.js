@@ -1,9 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
-const { uploadIcon, getAllIcons } = require("../controllers/icon.controllers");
+const {
+  getAllIcons,
+  getSingleIcon,
+  uploadIcon,
+  updateIcon,
+  deleteIcon,
+} = require("../controllers/icon.controllers");
 
+router.get("/", getAllIcons);
+router.get("/:_id", getSingleIcon);
 router.post("/", uploadIcon);
-router.get("/getallicons", getAllIcons);
+router.put("/:_id", updateIcon);
+router.delete("/:_id", deleteIcon);
 
 module.exports = router;

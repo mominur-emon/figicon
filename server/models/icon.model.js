@@ -16,11 +16,6 @@ const iconSchema = mongoose.Schema(
         required: true,
       },
     },
-
-    price: {
-      type: String,
-      required: true,
-    },
     category: {
       type: String,
       required: true,

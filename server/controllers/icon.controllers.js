@@ -1,7 +1,33 @@
 const Icon = require("../models/icon.model");
 const multer = require("multer");
 
-//using multer for uploaded images
+//get-> get all icons
+const getAllIcons = async (req, res) => {
+  try {
+    const icons = await Icon.find();
+    res.status(200).send(icons);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+//get-> get single icon
+const getSingleIcon = async (req, res) => {
+  try {
+    const icon = await Icon.findById(req.params._id);
+
+    if (!icon) {
+      res
+        .status(500)
+        .json({ message: "The icon with the given ID was not found." });
+    }
+    res.status(200).send(icon);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+//using multer for upload images
 const Storage = multer.diskStorage({
   destination: "uploads",
   filename: (req, file, cb) => {
@@ -10,6 +36,7 @@ const Storage = multer.diskStorage({
 });
 const upload = multer({ storage: Storage }).single("iconLink");
 
+//post-> upload icon
 const uploadIcon = async (req, res) => {
   try {
     await upload(req, res, async (error) => {
@@ -22,27 +49,75 @@ const uploadIcon = async (req, res) => {
             data: req.file.filename,
             contentType: "image/svg",
           },
-          price: req.body.price,
           category: req.body.category,
           lanes: req.body.subCategory,
           shape: req.body.shape,
+          pro: req.body.pro,
         });
         await newIcon.save();
         res.status(201).send(newIcon);
       }
     });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(500).send(error.message);
   }
 };
 
-const getAllIcons = async (req, res) => {
+//put-> update icon
+const updateIcon = async (req, res) => {
   try {
-    const icons = await Icon.find();
-    res.status(200).send(icons);
+    await upload(req, res, async (error) => {
+      if (error) {
+        res.status(404).send(error.message);
+      } else {
+        const icon = await Icon.findByIdAndUpdate(
+          req.params._id,
+          {
+            name: req.body.name,
+            iconLink: {
+              data: req.file.filename,
+              contentType: "image/svg",
+            },
+            category: req.body.category,
+            lanes: req.body.subCategory,
+            shape: req.body.shape,
+            pro: req.body.pro,
+          },
+          { new: true }
+        );
+
+        if (!icon) return res.status(400).send("the icon cannot be updated!");
+
+        res.status(201).send(icon);
+      }
+    });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 };
 
-module.exports = { uploadIcon, getAllIcons };
+//delete-> delete single icon by id
+const deleteIcon = async (req, res) => {
+  try {
+    const icon = await Icon.findByIdAndDelete(req.params._id);
+
+    if (icon) {
+      return res
+        .status(200)
+        .json({ success: true, message: "The icon is deleted!" });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "Icon not found!" });
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+module.exports = {
+  getAllIcons,
+  getSingleIcon,
+  uploadIcon,
+  updateIcon,
+  deleteIcon,
+};
