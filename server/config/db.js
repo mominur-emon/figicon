@@ -6,7 +6,7 @@ const dburl = config.db.url;
 mongoose
   .connect(dburl)
   .then(() => {
-    console.log("mongodb atlas is connected");
+    console.log("database is connected");
   })
   .catch((err) => {
     console.log(err);

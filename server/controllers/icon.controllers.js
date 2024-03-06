@@ -50,7 +50,7 @@ const uploadIcon = async (req, res) => {
             contentType: "image/svg",
           },
           category: req.body.category,
-          lanes: req.body.subCategory,
+          lanes: req.body.lanes,
           shape: req.body.shape,
           pro: req.body.pro,
         });
@@ -79,7 +79,7 @@ const updateIcon = async (req, res) => {
               contentType: "image/svg",
             },
             category: req.body.category,
-            lanes: req.body.subCategory,
+            lanes: req.body.lanes,
             shape: req.body.shape,
             pro: req.body.pro,
           },
@@ -100,6 +100,7 @@ const updateIcon = async (req, res) => {
 const deleteIcon = async (req, res) => {
   try {
     const icon = await Icon.findByIdAndDelete(req.params._id);
+    console.log(icon);
 
     if (icon) {
       return res
