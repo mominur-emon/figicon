@@ -15,6 +15,7 @@ const registerUser = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const newUser = new User({
+      name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
       isAdmin: req.body.isAdmin,
@@ -69,7 +70,31 @@ const loginUser = async (req, res) => {
     });
   }
 };
-//delete-> delete single user by id (/api/users/profile/:_id)
+//put-> update user (/api/users/profile/:id)
+const updateUser = async (req, res) => {
+  try {
+    if (!req.body.name || !req.body.email) {
+      return res.status(400).send("Incomplete data for user update.");
+    }
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+
+      {
+        name: req.body.name,
+        email: req.body.email,
+      },
+      { new: true }
+    );
+
+    if (!user) return res.status(400).send("the user cannot be updated!");
+
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+//delete-> delete single user by id (/api/users/profile/:id)
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -108,7 +133,7 @@ const getAllUserProfile = async (req, res) => {
   }
 };
 
-//get-> get single user (/api/users/profile/:_id)
+//get-> get single user (/api/users/profile/:id)
 const getSingleUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -130,4 +155,5 @@ module.exports = {
   loginUser,
   deleteUser,
   getSingleUser,
+  updateUser,
 };
