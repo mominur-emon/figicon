@@ -13,7 +13,7 @@ const adminMiddleware = require("../middlewares/adminMiddleware");
 router.post("/", registerUser);
 router.post("/login", loginUser);
 router.get("/profile", authMiddleware, adminMiddleware, getAllUserProfile);
-router.get("/profile/:_id", authMiddleware, getSingleUser);
-router.delete("/profile/:_id", authMiddleware, deleteUser);
+router.get("/profile/:id", authMiddleware, getSingleUser);
+router.delete("/profile/:id", authMiddleware, deleteUser);
 
 module.exports = router;

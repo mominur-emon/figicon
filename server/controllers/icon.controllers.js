@@ -14,7 +14,7 @@ const getAllIcons = async (req, res) => {
 //get-> get single icon (/api/icons/:_id)
 const getSingleIcon = async (req, res) => {
   try {
-    const icon = await Icon.findById(req.params._id);
+    const icon = await Icon.findById(req.params.id);
 
     if (!icon) {
       res
@@ -71,7 +71,7 @@ const updateIcon = async (req, res) => {
         res.status(404).send(error.message);
       } else {
         const icon = await Icon.findByIdAndUpdate(
-          req.params._id,
+          req.params.id,
           {
             name: req.body.name,
             iconLink: {
@@ -99,7 +99,7 @@ const updateIcon = async (req, res) => {
 //delete-> delete single icon by id (/api/icons/:_id)
 const deleteIcon = async (req, res) => {
   try {
-    const icon = await Icon.findByIdAndDelete(req.params._id);
+    const icon = await Icon.findByIdAndDelete(req.params.id);
     console.log(icon);
 
     if (icon) {

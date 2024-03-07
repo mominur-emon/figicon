@@ -23,12 +23,10 @@ const iconSchema = mongoose.Schema(
 
     lanes: {
       type: String,
-      required: true,
       enum: ["line", "solid"],
     },
     shape: {
       type: String,
-      required: true,
       enum: ["rounded", "square"],
     },
     pro: {

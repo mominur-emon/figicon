@@ -55,24 +55,24 @@ const loginUser = async (req, res) => {
         });
       } else {
         res.status(401).json({
-          error: "Authetication failed!",
+          error: "Authentication failed!",
         });
       }
     } else {
       res.status(401).json({
-        error: "Authetication failed!",
+        error: "Authentication failed!",
       });
     }
   } catch {
     res.status(401).json({
-      error: "Authetication failed!",
+      error: "Authentication failed!",
     });
   }
 };
 //delete-> delete single user by id (/api/users/profile/:_id)
 const deleteUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params._id);
+    const user = await User.findByIdAndDelete(req.params.id);
 
     if (user) {
       return res
@@ -111,7 +111,7 @@ const getAllUserProfile = async (req, res) => {
 //get-> get single user (/api/users/profile/:_id)
 const getSingleUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params._id);
+    const user = await User.findById(req.params.id);
 
     if (!user) {
       res
