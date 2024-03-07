@@ -33,6 +33,10 @@ const iconSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    popular: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

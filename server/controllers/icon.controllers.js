@@ -11,7 +11,7 @@ const getAllIcons = async (req, res) => {
   }
 };
 
-//get-> get single icon (/api/icons/:_id)
+//get-> get single icon (/api/icons/:id)
 const getSingleIcon = async (req, res) => {
   try {
     const icon = await Icon.findById(req.params.id);
@@ -53,6 +53,7 @@ const uploadIcon = async (req, res) => {
           lanes: req.body.lanes,
           shape: req.body.shape,
           pro: req.body.pro,
+          popular: req.body.popular,
         });
         await newIcon.save();
         res.status(201).send(newIcon);
@@ -63,7 +64,7 @@ const uploadIcon = async (req, res) => {
   }
 };
 
-//put-> update icon (/api/icons/:_id)
+//put-> update icon (/api/icons/:id)
 const updateIcon = async (req, res) => {
   try {
     await upload(req, res, async (error) => {
@@ -82,6 +83,7 @@ const updateIcon = async (req, res) => {
             lanes: req.body.lanes,
             shape: req.body.shape,
             pro: req.body.pro,
+            popular: req.body.popular,
           },
           { new: true }
         );
@@ -96,7 +98,7 @@ const updateIcon = async (req, res) => {
   }
 };
 
-//delete-> delete single icon by id (/api/icons/:_id)
+//delete-> delete single icon by id (/api/icons/:id)
 const deleteIcon = async (req, res) => {
   try {
     const icon = await Icon.findByIdAndDelete(req.params.id);
