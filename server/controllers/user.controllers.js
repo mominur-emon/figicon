@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 //post-> register user (/api/users)
 const registerUser = async (req, res) => {
@@ -53,6 +54,7 @@ const loginUser = async (req, res) => {
         res.status(200).json({
           access_token: token,
           message: "Login successful!",
+          user_id: user[0]._id,
         });
       } else {
         res.status(401).json({
@@ -149,6 +151,71 @@ const getSingleUser = async (req, res) => {
   }
 };
 
+// post-> post forget password (/api/users/forget)
+const forgetPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const oldUser = await User.findOne({ email });
+    if (!oldUser) {
+      return res.json({ status: "User Not Exists!!" });
+    }
+    const secret = process.env.JWT_SECRET + oldUser.password;
+    const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
+      expiresIn: "5m",
+    });
+    const link = `http://localhost:5000/api/users/reset/${oldUser._id}/${token}`;
+    // Configure email transport
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "mominur.emon195@gmail.com",
+        pass: "rxyusdnpumwkahlj",
+      },
+    });
+
+    await transporter.sendMail({
+      to: oldUser.email,
+      subject: "Password Reset",
+      html: `Click <a href="${link}">here</a> to reset your password.`,
+    });
+
+    console.log(link);
+    res.status(200).json({ message: "Password reset email sent" });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// post-> post reset password (/api/users/reset/:id/:token)
+const resetPassword = async (req, res) => {
+  try {
+    const { id, token } = req.params;
+    const { password } = req.body;
+
+    const oldUser = await User.findOne({ _id: id });
+    if (!oldUser) {
+      return res.json({ status: "User Not Exists!!" });
+    }
+    const secret = process.env.JWT_SECRET + oldUser.password;
+    jwt.verify(token, secret);
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    await User.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          password: encryptedPassword,
+        },
+      }
+    );
+
+    res.status(200).json({ message: "password reset success" });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 module.exports = {
   getAllUserProfile,
   registerUser,
@@ -156,4 +223,6 @@ module.exports = {
   deleteUser,
   getSingleUser,
   updateUser,
+  forgetPassword,
+  resetPassword,
 };

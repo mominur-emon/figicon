@@ -6,6 +6,8 @@ const {
   getSingleUser,
   deleteUser,
   updateUser,
+  resetPassword,
+  forgetPassword,
 } = require("../controllers/user.controllers");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
@@ -17,5 +19,8 @@ router.get("/profile", authMiddleware, adminMiddleware, getAllUserProfile);
 router.get("/profile/:id", authMiddleware, getSingleUser);
 router.put("/profile/:id", authMiddleware, updateUser);
 router.delete("/profile/:id", authMiddleware, deleteUser);
+router.post("/reset/:id/:token", resetPassword);
+
+router.post("/forget", forgetPassword);
 
 module.exports = router;
