@@ -117,10 +117,35 @@ const deleteIcon = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+//get-> get single icon by id (/api/icons/search?name=)
+const searchIcon = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    if (!name) {
+      return res.status(400).json({ error: "Name parameter is required" });
+    }
+
+    const icons = await Icon.find({ name: new RegExp(name, "i") }); // Case-insensitive search
+
+    if (!icons || icons.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No icons found with the given name" });
+    }
+
+    res.status(200).json(icons);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 module.exports = {
   getAllIcons,
   getSingleIcon,
   uploadIcon,
   updateIcon,
   deleteIcon,
+  searchIcon,
 };
