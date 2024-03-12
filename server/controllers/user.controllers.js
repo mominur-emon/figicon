@@ -47,14 +47,14 @@ const loginUser = async (req, res) => {
           },
           process.env.JWT_SECRET,
           {
-            expiresIn: "1m",
+            expiresIn: "7d",
           }
         );
         //set JWT as HTTP only cookie
         res.cookie("jwt", token, {
           httpOnly: true,
           sameSite: "strict",
-          maxAge: 1 * 60 * 1000, //1 minute
+          maxAge: 7 * 24 * 60 * 60 * 1000, //7days
         });
 
         res.status(200).json({
@@ -78,6 +78,21 @@ const loginUser = async (req, res) => {
     });
   }
 };
+
+//post-> logout user (/api/users/logout)
+const logoutUser = async (req, res) => {
+  try {
+    res.cookie("jwt", "", {
+      httpOnly: true,
+      expires: new Date(0), //0 days
+    });
+
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 //put-> update user (/api/users/profile/:id)
 const updateUser = async (req, res) => {
   try {
@@ -231,4 +246,5 @@ module.exports = {
   updateUser,
   forgetPassword,
   resetPassword,
+  logoutUser,
 };
