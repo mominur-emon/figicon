@@ -52,6 +52,7 @@ const uploadIcon = async (req, res) => {
           category: req.body.category,
           lanes: req.body.lanes,
           shape: req.body.shape,
+          description: req.body.description,
           pro: req.body.pro,
           popular: req.body.popular,
         });
@@ -82,6 +83,7 @@ const updateIcon = async (req, res) => {
             category: req.body.category,
             lanes: req.body.lanes,
             shape: req.body.shape,
+            description: req.body.description,
             pro: req.body.pro,
             popular: req.body.popular,
           },
@@ -102,7 +104,7 @@ const updateIcon = async (req, res) => {
 const deleteIcon = async (req, res) => {
   try {
     const icon = await Icon.findByIdAndDelete(req.params.id);
-    console.log(icon);
+    // console.log(icon);
 
     if (icon) {
       return res
@@ -140,6 +142,39 @@ const searchIcon = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+// //get-> get single icon by query (/api/icons/search?name=&category=)
+// const searchIcon = async (req, res) => {
+//   try {
+//     const { name, category } = req.query;
+
+//     if (!name && !category) {
+//       return res
+//         .status(400)
+//         .json({ error: "Name or category parameter is required" });
+//     }
+
+//     const searchCriteria = {};
+//     if (name) {
+//       searchCriteria.name = new RegExp(name, "i"); // Case-insensitive search for name
+//     }
+//     if (category) {
+//       searchCriteria.category = new RegExp(category, "i"); // Case-insensitive search for category
+//     }
+
+//     const icons = await Icon.find(searchCriteria);
+
+//     if (!icons || icons.length === 0) {
+//       return res
+//         .status(404)
+//         .json({ error: "No icons found with the given name and category" });
+//     }
+
+//     res.status(200).json(icons);
+//   } catch (error) {
+//     res.status(500).send(error.message);
+//   }
+// };
 
 module.exports = {
   getAllIcons,

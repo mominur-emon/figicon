@@ -29,6 +29,9 @@ const iconSchema = mongoose.Schema(
       type: String,
       enum: ["rounded", "square"],
     },
+    description: {
+      type: String,
+    },
     pro: {
       type: Boolean,
       default: false,
