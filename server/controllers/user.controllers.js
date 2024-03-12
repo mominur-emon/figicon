@@ -47,9 +47,15 @@ const loginUser = async (req, res) => {
           },
           process.env.JWT_SECRET,
           {
-            expiresIn: "1d",
+            expiresIn: "1m",
           }
         );
+        //set JWT as HTTP only cookie
+        res.cookie("jwt", token, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 1 * 60 * 1000, //1 minute
+        });
 
         res.status(200).json({
           access_token: token,
